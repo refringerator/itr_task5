@@ -1,11 +1,13 @@
+import AntConfigProvider from "./components/AntConfigProvider";
 import CommandPanel from "./components/CommandPanel";
+
+import Layout from "./components/Layout";
 
 function App() {
   return (
-    <>
-      <CommandPanel />
-      <p className="read-the-docs">Тут будет таблица</p>
-    </>
+    <AntConfigProvider>
+      <Layout header={<CommandPanel />}>Content</Layout>
+    </AntConfigProvider>
   );
 }
 
