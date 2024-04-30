@@ -1,8 +1,5 @@
-import { useState } from "react";
 import CommandPanel from "./components/CommandPanel";
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <CommandPanel />

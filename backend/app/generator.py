@@ -1,5 +1,5 @@
 from mimesis.locales import Locale
-from mimesis import Field, Fieldset, Fieldset
+from mimesis import Field, Fieldset
 import math
 from enum import Enum
 

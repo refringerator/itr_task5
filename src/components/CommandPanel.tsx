@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { InputNumberProps } from "antd";
-import { Col, InputNumber, Row, Slider, Space } from "antd";
+import { Col, InputNumber, Row, Slider } from "antd";
 
 const CommandPanel = () => {
   const [inputValue, setInputValue] = useState(0);
