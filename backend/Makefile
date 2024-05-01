@@ -2,7 +2,7 @@ PYTHON = python3
 .PHONY = test
 
 test:
-	PYTHONPATH=. ${PYTHON} -m pytest
+	PYTHONPATH=. ${PYTHON} -m pytest -vv
 
 run:
 	uvicorn app.main:app --reload --host 0.0.0.0 --port 9191
