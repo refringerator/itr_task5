@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { InputNumberProps } from "antd";
-import { Col, InputNumber, Row, Slider } from "antd";
+import { Col, InputNumber, Slider, Flex } from "antd";
 
 const ErrorInput = () => {
   const [inputValue, setInputValue] = useState(0);
@@ -12,7 +12,8 @@ const ErrorInput = () => {
   };
 
   return (
-    <Row>
+    <Flex gap="small" align="center">
+      <Col>Errors:</Col>
       <Col span={12}>
         <Slider
           min={0}
@@ -26,13 +27,12 @@ const ErrorInput = () => {
         <InputNumber
           min={0}
           max={1000}
-          style={{ margin: "0 16px" }}
           step={1}
           value={inputValue}
           onChange={onChange}
         />
       </Col>
-    </Row>
+    </Flex>
   );
 };
 export default ErrorInput;
