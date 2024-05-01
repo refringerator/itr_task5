@@ -1,26 +1,35 @@
 import { Flex, Select } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { settingsSelectors, setLocale } from "src/store";
 
 const RegionSelector = () => {
-  const handleChange = (value: { value: string; label: React.ReactNode }) => {
-    console.log(value);
+  const dispatch = useDispatch();
+  const locale = useSelector(settingsSelectors.getLocale);
+
+  const handleChange = (value: { value: string; label: string }) => {
+    dispatch(setLocale(value));
   };
 
   return (
     <Flex gap="small" align="center">
-      Region:
+      Locale:
       <Select
         labelInValue
-        defaultValue={{ value: "lucy", label: "Lucy (101)" }}
-        style={{ width: 120 }}
+        defaultValue={locale}
+        style={{ minWidth: 120 }}
         onChange={handleChange}
         options={[
           {
-            value: "jack12312",
-            label: "Jack (100)jack12312",
+            value: "en",
+            label: "English",
           },
           {
-            value: "lucy",
-            label: "Lucy (101)",
+            value: "fr",
+            label: "French",
+          },
+          {
+            value: "de",
+            label: "German",
           },
         ]}
       />

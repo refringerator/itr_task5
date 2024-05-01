@@ -1,14 +1,18 @@
 import { useState } from "react";
 import type { InputNumberProps } from "antd";
 import { Col, InputNumber, Slider, Flex } from "antd";
+import { useDispatch } from "react-redux";
+import { setErrors } from "src/store";
 
 const ErrorInput = () => {
+  const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState(0);
   const onChange: InputNumberProps["onChange"] = (value) => {
     if (isNaN(value as number)) {
       return;
     }
     setInputValue(value as number);
+    dispatch(setErrors(value as number));
   };
 
   return (
