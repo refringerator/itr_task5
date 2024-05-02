@@ -9,6 +9,9 @@ const headerStyle: React.CSSProperties = {
   lineHeight: "48px",
   backgroundColor: "rgba(0, 0, 0, 0.1)",
   width: "100%",
+  position: "sticky",
+  top: "0",
+  zIndex: 10,
 };
 
 interface ILayout {
