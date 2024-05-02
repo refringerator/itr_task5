@@ -31,4 +31,4 @@ async def regions():
 
 @app.get("/users/")
 def get_users(region: str, seed: str, mistakes: float, skip: int = 0, limit: int = 10):
-    return generate_many(skip, limit, region, seed, mistakes)
+    return {"offset": skip, "items": generate_many(skip, limit, region, seed, mistakes)}
