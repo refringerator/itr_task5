@@ -1,111 +1,63 @@
-import React from "react";
-import { Space, Table } from "antd";
-import type { TableProps } from "antd";
-import { useGetUsersQuery } from "src/service/users";
-
-interface RecordType {
-  id: number;
-  firstName: string;
-  lastName: string;
-  age: number;
-  address1: string;
-  address2: string;
-  address3: string;
-}
-
-const fixedColumns: TableProps<RecordType>["columns"] = [
-  {
-    title: "ID",
-    dataIndex: "id",
-    width: 100,
-  },
-  {
-    title: "FistName",
-    dataIndex: "firstName",
-    width: 120,
-  },
-  {
-    title: "LastName",
-    dataIndex: "lastName",
-    width: 120,
-  },
-  {
-    title: "Address 3",
-    dataIndex: "address3",
-    width: 120,
-  },
-];
-
-const columns: TableProps<RecordType>["columns"] = [
-  {
-    title: "#",
-    dataIndex: "index",
-    width: 100,
-  },
-  {
-    title: "ID",
-    dataIndex: "id",
-    width: 100,
-  },
-  {
-    title: "Full name",
-    dataIndex: "name",
-    width: 120,
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    width: 120,
-  },
-  {
-    title: "Phone",
-    dataIndex: "phone",
-    width: 120,
-  },
-];
-
-// const getData = (count: number) => {
-//   const data: RecordType[] = new Array(count).fill(null).map((_, index) => ({
-//     id: index,
-//     index: index,
-//     full_name: `First_${index.toString(16)}`,
-//     lastName: `Last_${index.toString(16)}`,
-//     telephone: 25 + (index % 10),
-//     address: `New York No. ${index} Lake Park`,
-//   }));
-
-//   return data;
-// };
+import { useEffect, useState } from "react";
+import { Space } from "antd";
+import { User, useLazyGetUsersQuery } from "src/service/users";
+import Table from "./Table";
 
 const params = {
-  skip: 0,
-  limit: 20,
-  mistakes: 0,
+  mistakes: 5,
   seed: "string",
   region: "en",
 };
 
+const limit = 20;
+
 const InfiniteScrollTable = () => {
-  const { data: users, isLoading, isFetching } = useGetUsersQuery(params);
+  const [rows, setRows] = useState<User[]>([]);
+  const [skip, setSkip] = useState(0);
+  const [fetching, setFetching] = useState(false);
 
-  const bordered = true;
-  const count = 10000;
+  const [trigger, { data, isLoading }] = useLazyGetUsersQuery({
+    ...params,
+    skip,
+    limit,
+  });
 
-  const tblRef: Parameters<typeof Table>[0]["ref"] = React.useRef(null);
-  // const data = React.useMemo(() => getData(count), [count]);
+  useEffect(() => {
+    trigger({
+      ...params,
+      skip,
+      limit,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading)
+      if (data) {
+        setRows([...rows, ...data.items]);
+        setFetching(false);
+      }
+  }, [data?.offset, isLoading]);
+
+  const onScroll = (e) => {
+    const st = e.currentTarget.scrollTop;
+    const stm = e.currentTarget.scrollTopMax;
+    const p = st / stm;
+    const dif = stm - st;
+
+    console.log({ dif, isLoading, fetching });
+
+    if (isLoading || fetching) return;
+
+    if (dif < 1000) {
+      setFetching(true);
+      trigger({ ...params, skip: skip + limit, limit });
+      setSkip(skip + limit);
+    }
+  };
 
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
-      <Table
-        bordered={bordered}
-        virtual
-        columns={columns}
-        scroll={{ y: 400 }}
-        rowKey="id"
-        dataSource={users}
-        pagination={false}
-        ref={tblRef}
-      />
+      <Table data={rows} onScroll={onScroll} />
     </Space>
   );
 };

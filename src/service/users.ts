@@ -16,11 +16,14 @@ export interface QueryParams {
   region: string;
 }
 
-type IssuesResponse = User[];
+type UsersResponse = {
+  items: User[];
+  offset: number;
+};
 
 export const usersApi = api.injectEndpoints({
   endpoints: (build) => ({
-    getUsers: build.query<IssuesResponse, QueryParams>({
+    getUsers: build.query<UsersResponse, QueryParams>({
       query: ({ skip, limit, mistakes, seed, region }) => ({
         url: `users/?region=${region}&seed=${seed}&mistakes=${mistakes}&skip=${skip}&limit=${limit}`,
       }),
