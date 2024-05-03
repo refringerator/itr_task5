@@ -3,10 +3,10 @@ from random import Random as stdRandom
 from mimesis.locales import Locale
 
 from .errors import ErrField, ErrType, enum_by_index
-from .my_random import generate_alphabet, person, address
+from .my_random import generate_alphabet, person, address, possible_indexes_list
 
 
-def generate(locale: Locale, seed, mistakes):
+def generate(locale: Locale, seed, mistakes: float):
     prs = person(locale)
     adr = address(locale)
     std_rnd = stdRandom(seed)
@@ -27,7 +27,7 @@ def generate(locale: Locale, seed, mistakes):
         "errors": {
             "field": std_rnd.choices([idx for idx in range(len(ErrField))], k=mistakes_int + 1),
             "type": std_rnd.choices([idx for idx in range(len(ErrType.get_values()))], k=mistakes_int + 1),
-            "index": std_rnd.choices([i for i in range(-1000, 1000)], k=mistakes_int + 1),
+            "index": std_rnd.choices(possible_indexes_list(), k=mistakes_int + 1),
         },
     }
 

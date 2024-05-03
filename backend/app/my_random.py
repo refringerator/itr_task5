@@ -31,3 +31,7 @@ def person(locale):
 @cache
 def address(locale):
     return Address(locale=locale)
+
+@cache
+def possible_indexes_list(min=-1000, max=1000):
+    return [i for i in range(min, max)]
