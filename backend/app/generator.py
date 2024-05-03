@@ -1,6 +1,5 @@
 import math
-
-from mimesis.random import Random
+from random import Random as stdRandom
 from mimesis.locales import Locale
 
 from .errors import ErrField, ErrType, enum_by_index
@@ -10,7 +9,7 @@ from .my_random import generate_alphabet, person, address
 def generate(locale: Locale, seed, mistakes):
     prs = person(locale)
     adr = address(locale)
-    rnd = Random(seed)
+    std_rnd = stdRandom(seed)
 
     prs.reseed(seed=seed)
     adr.reseed(seed=seed)
@@ -22,12 +21,13 @@ def generate(locale: Locale, seed, mistakes):
         ErrField.NAME: prs.full_name(),
         ErrField.ADDRESS: f"{adr.city()}, {adr.address()}",
         ErrField.PHONE: prs.telephone(),
-        "id": rnd.randbytes().hex(),
-        "err_count": rnd.weighted_choice(choices={mistakes_int + 1: p, mistakes_int: 1 - p}),
+
+        "id": std_rnd.randbytes(16).hex(),
+        "err_count": std_rnd.choices([mistakes_int + 1, mistakes_int], weights=[p, 1 - p])[0],
         "errors": {
-            "field": rnd.randints(n=mistakes_int + 1, a=0, b=len(ErrField)),
-            "type": rnd.randints(n=mistakes_int + 1, a=0, b=len(ErrType.get_values())),
-            "index": rnd.randints(n=mistakes_int + 1, a=-1000, b=1000),
+            "field": std_rnd.choices([idx for idx in range(len(ErrField))], k=mistakes_int + 1),
+            "type": std_rnd.choices([idx for idx in range(len(ErrType.get_values()))], k=mistakes_int + 1),
+            "index": std_rnd.choices([i for i in range(-1000, 1000)], k=mistakes_int + 1),
         },
     }
 
