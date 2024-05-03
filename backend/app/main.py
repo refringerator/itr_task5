@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.generator import generate_many, available_regions
+from .generator import generate_many, available_regions
 
 app = FastAPI()
 
@@ -19,6 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -30,5 +31,13 @@ async def regions():
 
 
 @app.get("/users/")
-def get_users(region: str, seed: str, mistakes: float, skip: int = 0, limit: int = 10):
+async def get_users(
+    region: str, seed: str, mistakes: float, skip: int = 0, limit: int = 10
+):
     return {"offset": skip, "items": generate_many(skip, limit, region, seed, mistakes)}
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app=app, port=9191)
