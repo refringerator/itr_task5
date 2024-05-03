@@ -1,7 +1,6 @@
 from functools import lru_cache
 from mimesis.locales import Locale
 from mimesis import Field, Schema
-from mimesis import random
 import math
 from enum import Enum
 
@@ -14,44 +13,43 @@ def person(locale):
     return Person(locale=locale)
 
 
-# @lru_cache
-# def rand():
-#     return Random()
-
-
 @lru_cache
 def address(locale):
     return Address(locale=locale)
+
+
+@lru_cache
+def alphabet(locale=Locale.DEFAULT, iterations=1000) -> dict:
+    field = Field(locale=locale, seed=0x00)
+    schema = Schema(schema=lambda: base_scheme(field), iterations=iterations)
+    data = schema.create()
+    keys = base_scheme(field).keys()
+    return {key: "".join([el[key] for el in data]) for key in keys}
 
 
 def generate(region: str, seed, mistakes):
     loc = Locale[region.upper()]
 
     prs = person(loc)
-    r = Random(seed)
-    a = address(loc)
+    adr = address(loc)
+    rnd = Random(seed)
 
     prs.reseed(seed=seed)
-    a.reseed(seed=seed)
+    adr.reseed(seed=seed)
 
     p, i = math.modf(mistakes)
     err_int = int(i)
 
     return {
         ErrField.NAME: prs.full_name(),
-        ErrField.ADDRESS: f"{a.city()}, {a.address()}",
+        ErrField.ADDRESS: f"{adr.city()}, {adr.address()}",
         ErrField.PHONE: prs.telephone(),
-        "id": r.randbytes().hex(),
-        "err_count": r.weighted_choice(choices={err_int + 1: p, err_int: 1 - p}),
-        # "err_count": field(
-        #     "random.weighted_choice",
-        # ),
+        "id": rnd.randbytes().hex(),
+        "err_count": rnd.weighted_choice(choices={err_int + 1: p, err_int: 1 - p}),
         "errors": {
-            # "field": fieldset("random.choice_enum_item", enum=ErrField, i=err_int + 1),
-            "field": r.randints(n=err_int + 1, a=0, b=len(ErrField)),
-            "type": r.randints(n=err_int + 1, a=0, b=len(ErrType.Errors())),
-            # "random.choice_enum_item", enum=ErrType.Errors(), i=err_int + 1)
-            "index": r.randints(n=err_int + 1, a=-1000, b=1000),
+            "field": rnd.randints(n=err_int + 1, a=0, b=len(ErrField)),
+            "type": rnd.randints(n=err_int + 1, a=0, b=len(ErrType.Errors())),
+            "index": rnd.randints(n=err_int + 1, a=-1000, b=1000),
         },
     }
 
@@ -62,12 +60,18 @@ def apply_errors(record, region):
         return record
 
     a = alphabet(Locale[region.upper()])
+
+    fields = {key: list(record[key]) for key in ErrField}
+
     errs = record["errors"]
     for _, field_index, err_type, index in zip(
         range(err_count), errs["field"], errs["type"], errs["index"]
     ):
         field = ErrField.get_by_index(field_index)
-        record[field] = ErrType.get_by_index(err_type)(record[field], index, a[field])
+        ErrType.get_by_index(err_type)(fields[field], index, a[field])
+
+    for key in fields:
+        record[key] = "".join(fields[key])
 
     return record
 
@@ -84,36 +88,30 @@ class ErrField(Enum):
         raise IndexError("Index out of range")
 
 
-@lru_cache
-def alphabet(locale=Locale.DEFAULT, iterations=1000) -> dict:
-    field = Field(locale=locale, seed=0x00)
-    schema = Schema(schema=lambda: base_scheme(field), iterations=iterations)
-    data = schema.create()
-    keys = base_scheme(field).keys()
-    return {key: "".join([el[key] for el in data]) for key in keys}
-
-
 class ErrType(Enum):
     @classmethod
-    def _add(cls, s: str, index: int, alphabet: str):
+    def _add(cls, s: list[str], index: int, alphabet: str):
         i = index % (len(s) + 1)
         symbol = alphabet[index % len(alphabet)]
-        return s[:i] + symbol + s[i:]
+        s.insert(i, symbol)
+        return s
 
     @classmethod
-    def _remove(cls, s: str, index: int, *args):
+    def _remove(cls, s: list[str], index: int, *args):
         if len(s) == 0:
             return s
         i = index % len(s)
-        return s[:i] + s[i + 1 :]
+        s.pop(i)
+        return s
 
     @classmethod
-    def _swap(cls, s: str, index: int, *args):
+    def _swap(cls, s: list[str], index: int, *args):
         if len(s) < 2:
             return s
 
         i = index % (len(s) - 1)
-        return s[:i] + s[i + 1] + s[i] + s[i + 2 :]
+        s[i], s[i + 1] = s[i + 1], s[i]
+        return s
 
     REMOVE = _remove
     ADD = _add
@@ -150,31 +148,6 @@ def base_scheme(field):
 @lru_cache
 def create_field(locale):
     return Field(locale=locale)
-
-
-# def generate_old(region: str, seed, mistakes):
-#     loc = Locale[region.upper()]
-#     random.global_seed = seed
-
-#     p, i = math.modf(mistakes)
-#     err_int = int(i)
-
-#     field = Field(locale=loc)
-#     fieldset = Fieldset(locale=loc)
-
-#     return base_scheme(field) | {
-#         "id": field("random.randbytes", key=lambda s: s.hex()),
-#         "err_count": field(
-#             "random.weighted_choice", choices={err_int + 1: p, err_int: 1 - p}
-#         ),
-#         "errors": {
-#             "field": fieldset("random.choice_enum_item", enum=ErrField, i=err_int + 1),
-#             "type": fieldset(
-#                 "random.choice_enum_item", enum=ErrType.Errors(), i=err_int + 1
-#             ),
-#             "index": fieldset("integer_number", i=err_int + 1),
-#         },
-#     }
 
 
 def remove_fields(record):

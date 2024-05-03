@@ -3,21 +3,21 @@ from .generator import ErrType, ErrField, base_scheme, alphabet
 
 def test_err_add():
     s = "ABC"
-    res = set([ErrType.ADD(s, i, "***") for i in range(1000)])
+    res = set(["".join(ErrType.ADD(list(s), i, "***")) for i in range(1000)])
 
     assert {"*ABC", "A*BC", "AB*C", "ABC*"} == res
 
 
 def test_err_swap():
     s = "ABCD"
-    res = set([ErrType.SWAP(s, i) for i in range(1000)])
+    res = set(["".join(ErrType.SWAP(list(s), i)) for i in range(1000)])
 
     assert {"BACD", "ACBD", "ABDC"} == res
 
 
 def test_err_remove():
     s = "ABCD"
-    res = set([ErrType.REMOVE(s, i) for i in range(1000)])
+    res = set(["".join(ErrType.REMOVE(list(s), i)) for i in range(1000)])
 
     assert {"BCD", "ACD", "ABD", "ABC"} == res
 

@@ -80,8 +80,5 @@ def test_users_20000mistakes():
     assert first_record["index"] == 21
     assert first_record["name"] == "cdBrss nz silPrcnigtaoienrK  yyoeene"
     assert first_record["address"] == "oa t yeareetc c dn1  a  ec   rr6lWrpe,a siild"
-    assert (
-        first_record["phone"]
-        == "55194039707411975919+57+4-7492+7120127+7"
-    )
+    assert first_record["phone"] == "55194039707411975919+57+4-7492+7120127+7"
     assert first_record["id"] == "8f92ddcea15f5a033c40006b5da5274c"
