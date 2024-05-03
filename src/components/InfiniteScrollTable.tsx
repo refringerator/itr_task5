@@ -4,7 +4,7 @@ import { User, useLazyGetUsersQuery } from "src/service/users";
 import Table from "./Table";
 
 const params = {
-  mistakes: 5,
+  mistakes: 0,
   seed: "string",
   region: "en",
 };
@@ -40,11 +40,11 @@ const InfiniteScrollTable = () => {
 
   const onScroll = (e) => {
     const st = e.currentTarget.scrollTop;
-    const stm = e.currentTarget.scrollTopMax;
+    const stm = e.currentTarget.scrollHeight;
     const p = st / stm;
     const dif = stm - st;
 
-    console.log({ dif, isLoading, fetching });
+    console.log({ dif, isLoading, fetching, st, stm, e });
 
     if (isLoading || fetching) return;
 
