@@ -1,4 +1,5 @@
-from .generator import ErrType, ErrField, base_scheme, alphabet
+from .my_random import base_scheme, generate_alphabet
+from .errors import ErrType, ErrField
 
 
 def test_err_add():
@@ -29,7 +30,7 @@ def test_base_scheme_keys():
 
 
 def test_alphabet():
-    assert alphabet(iterations=2) == {
+    assert generate_alphabet(iterations=2) == {
         ErrField.NAME: "Reda BarreraJames Carey",
         ErrField.ADDRESS: "Woodburn, 789 Princeton BendFort Lauderdale, 1048 Sonoma Point",
         ErrField.PHONE: "+16154989382+15617957610",
