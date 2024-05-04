@@ -22,7 +22,7 @@ const Seed = () => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
-    update(e.target.value, (v) => dispatch(setSeed(v)));
+    update(e.target.value, (v: string) => dispatch(setSeed(v)));
   };
 
   return (

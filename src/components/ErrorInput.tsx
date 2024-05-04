@@ -3,6 +3,9 @@ import type { InputNumberProps } from "antd";
 import { Col, InputNumber, Slider, Flex } from "antd";
 import { useDispatch } from "react-redux";
 import { setErrors } from "src/store";
+import debounce from "debounce";
+
+const update = debounce((v, f) => f(v), 600);
 
 const ErrorInput = () => {
   const dispatch = useDispatch();
@@ -12,7 +15,7 @@ const ErrorInput = () => {
       return;
     }
     setInputValue(value as number);
-    dispatch(setErrors(value as number));
+    update(value as number, (v: number) => dispatch(setErrors(v)));
   };
 
   return (
