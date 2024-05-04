@@ -1,9 +1,5 @@
 import { Flex } from "antd";
-
-import ErrorInput from "./ErrorInput";
-import ExportButton from "./ExportButton";
-import RegionSelector from "./RegionSelector";
-import Seed from "./Seed";
+import { ErrorInput, ExportButton, RegionSelector, Seed } from "src/components";
 
 const CommandPanel = () => {
   return (

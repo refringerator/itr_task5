@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { RowParams, User, useLazyGetUsersQuery } from "src/service/users";
 
-const useObsElements = (params: RowParams, limit: number) => {
+const useObsElementsAndQuery = (params: RowParams, limit: number) => {
   const obsIndex = Math.ceil(limit * 0.25);
   const [trigger, { data, isLoading }] = useLazyGetUsersQuery();
   const [rows, setRows] = useState<User[]>([]);
@@ -41,4 +41,4 @@ const useObsElements = (params: RowParams, limit: number) => {
   return rows;
 };
 
-export default useObsElements;
+export default useObsElementsAndQuery;

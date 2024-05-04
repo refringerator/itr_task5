@@ -1,6 +1,6 @@
 import { Space } from "antd";
-import Table from "./Table";
-import useObsElements from "src/hooks/useObsElements";
+import { UsersTable } from "src/components";
+import useObsElementsAndQuery from "src/hooks/useObsElementsAndQuery";
 
 const params = {
   mistakes: 10,
@@ -11,11 +11,11 @@ const params = {
 const limit = 20;
 
 const InfiniteScrollUserTable = () => {
-  const rows = useObsElements(params, limit);
+  const rows = useObsElementsAndQuery(params, limit);
 
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
-      <Table data={rows} />
+      <UsersTable data={rows} />
     </Space>
   );
 };

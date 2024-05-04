@@ -1,38 +1,15 @@
 import { Table } from "antd";
 import type { TableProps } from "antd";
+import { LegacyRef } from "react";
 
-interface RecordType {
-  id: number;
-  firstName: string;
-  lastName: string;
-  age: number;
-  address1: string;
-  address2: string;
-  address3: string;
+export interface RecordType {
+  index: number;
+  id: string;
+  name: string;
+  address: string;
+  phone: string;
+  ref?: LegacyRef<HTMLSpanElement>;
 }
-
-const fixedColumns: TableProps<RecordType>["columns"] = [
-  {
-    title: "ID",
-    dataIndex: "id",
-    width: 100,
-  },
-  {
-    title: "FistName",
-    dataIndex: "firstName",
-    width: 120,
-  },
-  {
-    title: "LastName",
-    dataIndex: "lastName",
-    width: 120,
-  },
-  {
-    title: "Address 3",
-    dataIndex: "address3",
-    width: 120,
-  },
-];
 
 const columns: TableProps<RecordType>["columns"] = [
   {
@@ -65,7 +42,7 @@ const columns: TableProps<RecordType>["columns"] = [
 
 const HeadersAndPaddingSize = 48 + 60 + 30;
 
-const MyTable = ({ data }) => {
+const UsersTable = ({ data }: { data: RecordType[] }) => {
   const containerHeight = window.innerHeight - HeadersAndPaddingSize;
 
   return (
@@ -81,4 +58,4 @@ const MyTable = ({ data }) => {
   );
 };
 
-export default MyTable;
+export default UsersTable;
