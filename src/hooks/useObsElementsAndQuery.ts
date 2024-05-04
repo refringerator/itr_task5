@@ -1,43 +1,47 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { RowParams, User, useLazyGetUsersQuery } from "src/service/users";
+import { useInfiniteQuery } from "react-query";
+import { shallowEqual, useSelector } from "react-redux";
+import { settingsSelectors } from "src/store";
 
-const useObsElementsAndQuery = (params: RowParams, limit: number) => {
-  const [trigger, { data, isLoading }] = useLazyGetUsersQuery();
-  const [rows, setRows] = useState<User[]>([]);
-  const skip = useRef(0);
+const fetchUsers = async ({ queryKey, pageParam }) => {
+  const { seed, region, mistakes } = queryKey[1];
+  const { skip = 0, limit = 20 } = pageParam || {};
+
+  const result = await fetch(
+    `http://127.0.0.1:9191/users/?region=${region}&seed=${seed}&mistakes=${mistakes}&skip=${skip}&limit=${limit}`
+  );
+  return result.json();
+};
+
+const useObsElementsAndQuery = () => {
+  const params = useSelector(settingsSelectors.getParams, shallowEqual);
 
   const { ref, inView } = useInView({
     threshold: 1,
     trackVisibility: true,
-    delay: 100,
-    triggerOnce: false,
+    delay: 200,
+    triggerOnce: true,
   });
 
-  useEffect(() => {
-    if (!isLoading) {
-      trigger({
-        ...params,
-        skip: skip.current,
-        limit,
-      });
-      skip.current += limit;
+  const { isLoading, isFetching, data, fetchNextPage } = useInfiniteQuery(
+    ["users", { ...params }],
+    fetchUsers,
+    {
+      getNextPageParam: (lastPage, _pages) => lastPage.next_page,
     }
-  }, [isLoading, inView, trigger]);
+  );
 
   useEffect(() => {
-    if (!isLoading && data) {
-      // Set intersection observer to the last element
-      const nr = data.items.map((val, i) => ({
-        ...val,
-        ref: i === data.items.length - 1 ? ref : null,
-      }));
+    if (!isFetching) fetchNextPage();
+  }, [inView]);
 
-      setRows((rows) => [...rows.map((v) => ({ ...v, ref: null })), ...nr]);
-    }
-  }, [data?.offset, isLoading]);
-
-  return rows;
+  return {
+    rows: (data?.pages.flatMap((page) => [...page.items]) || []).map(
+      (v, i, a) => ({ ...v, ref: i === a.length - 1 ? ref : null })
+    ),
+    isLoading,
+  };
 };
 
 export default useObsElementsAndQuery;
