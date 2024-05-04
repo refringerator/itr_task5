@@ -3,13 +3,14 @@ import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "react-query";
 import { shallowEqual, useSelector } from "react-redux";
 import { settingsSelectors } from "src/store";
+import { API_URL } from "src/constants";
 
 const fetchUsers = async ({ queryKey, pageParam }) => {
   const { seed, region, mistakes } = queryKey[1];
   const { skip = 0, limit = 20 } = pageParam || {};
 
   const result = await fetch(
-    `http://127.0.0.1:9191/users/?region=${region}&seed=${seed}&mistakes=${mistakes}&skip=${skip}&limit=${limit}`
+    `${API_URL}/users/?region=${region}&seed=${seed}&mistakes=${mistakes}&skip=${skip}&limit=${limit}`
   );
   return result.json();
 };
