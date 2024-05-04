@@ -1,3 +1,5 @@
+import csv
+from io import StringIO
 import math
 from random import Random as stdRandom
 from mimesis.locales import Locale
@@ -21,12 +23,17 @@ def generate(locale: Locale, seed, mistakes: float):
         ErrField.NAME: prs.full_name(),
         ErrField.ADDRESS: f"{adr.city()}, {adr.address()}",
         ErrField.PHONE: prs.telephone(),
-
         "id": std_rnd.randbytes(16).hex(),
-        "err_count": std_rnd.choices([mistakes_int + 1, mistakes_int], weights=[p, 1 - p])[0],
+        "err_count": std_rnd.choices(
+            [mistakes_int + 1, mistakes_int], weights=[p, 1 - p]
+        )[0],
         "errors": {
-            "field": std_rnd.choices([idx for idx in range(len(ErrField))], k=mistakes_int + 1),
-            "type": std_rnd.choices([idx for idx in range(len(ErrType.get_values()))], k=mistakes_int + 1),
+            "field": std_rnd.choices(
+                [idx for idx in range(len(ErrField))], k=mistakes_int + 1
+            ),
+            "type": std_rnd.choices(
+                [idx for idx in range(len(ErrType.get_values()))], k=mistakes_int + 1
+            ),
             "index": std_rnd.choices(possible_indexes_list(), k=mistakes_int + 1),
         },
     }
@@ -81,3 +88,16 @@ def generate_many(skip, limit, region, user_seed, mistakes):
         prepare_row(i, region, user_seed=user_seed, mistakes=mistakes, locale=locale)
         for i in range(skip + 1, limit + skip + 1)
     ]
+
+
+def generate_csv_rows(skip, limit, region, seed, mistakes):
+    buffer = StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow(["index", "name", "address", "phone", "id"])
+    for row in generate_many(
+        skip=0, limit=skip + limit, region=region, user_seed=seed, mistakes=mistakes
+    ):
+        writer.writerow(row.values())
+
+    buffer.seek(0)
+    return buffer

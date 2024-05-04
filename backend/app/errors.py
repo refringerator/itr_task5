@@ -41,7 +41,6 @@ class ErrType(Enum):
     def get_values(cls):
         return [cls.REMOVE, cls.ADD, cls.SWAP]
 
-    
 
 @cache
 def enum_by_index(enum, index):
