@@ -7,11 +7,13 @@ export interface SettingsState {
   errors: number;
   seed: string;
   locale: LocaleType;
+  skip: number;
 }
 
 const randomString = () => Math.random().toString(36).substring(2);
 
 const initialState: SettingsState = {
+  skip: 0,
   errors: 0,
   seed: "0",
   locale: { value: "en", label: "English" },
@@ -33,10 +35,13 @@ export const settingsSlice = createSlice({
     setLocale: (state, action: PayloadAction<LocaleType>) => {
       state.locale = action.payload;
     },
+    setSkip: (state, action: PayloadAction<number>) => {
+      state.skip = action.payload;
+    },
   },
 });
 
-export const { setErrors, setSeed, setLocale, generateSeed } =
+export const { setErrors, setSeed, setLocale, generateSeed, setSkip } =
   settingsSlice.actions;
 
 export default settingsSlice.reducer;
@@ -50,6 +55,9 @@ export const settingsSelectors = {
   },
   getLocale: (state: RootState) => {
     return state.settings.locale;
+  },
+  getSkip: (state: RootState) => {
+    return state.settings.skip;
   },
   getParams: (state: RootState) => {
     return {
