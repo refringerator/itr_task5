@@ -1,30 +1,40 @@
-# React + TypeScript + Vite
+# Fake User Data Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Web-app with python backend to generate fake user data
 
-Currently, two official plugins are available:
+### Tech stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Python 3.10
+2. [Mimesis: The Fake Data Generator](https://pypi.org/project/mimesis/)
+3. [FastAPI](https://pypi.org/project/fastapi/)
+4. [PyTest](https://pypi.org/project/pytest/)
+5. NodeJS
+6. [Vite template React + TypeScript](https://vitejs.dev/guide/)
+7. [Ant Design](https://ant.design/components/overview/)
+8. [Redux toolkit](https://redux-toolkit.js.org/)
+9. [~~Redux toolkit query~~](https://redux-toolkit.js.org/rtk-query/overview)
+10. [React Query](https://tanstack.com/query/v3)
+11. [react-intersection-observer](https://www.npmjs.com/package/react-intersection-observer)
+12. [debounce](https://www.npmjs.com/package/debounce)
+13. [useHooks](https://usehooks.com/)
 
-## Expanding the ESLint configuration
+### How to local run
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+0. Clone repository
 
-- Configure the top-level `parserOptions` property like this:
+#### Python backend
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+1. Create the virtual environment `python3 -m venv myenv`
+2. Activate the virtual environment `source myenv/bin/activate`
+3. Install requirements `pip install -r requirements.txt`
+4. Run python backend with `cd backend && make run`
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+#### Web app
+
+1. Install dependencies with `npm install`
+2. Run with `npm run dev`
+3. Follow link in terminal (usually http://localhost:5173/)
+
+### Demo
+
+![Demo](/media/demo.gif)
