@@ -21,6 +21,7 @@ export interface QueryParams extends RowParams {
 type UsersResponse = {
   items: User[];
   offset: number;
+  // params: RowParams;
 };
 
 export const usersApi = api.injectEndpoints({
@@ -29,12 +30,25 @@ export const usersApi = api.injectEndpoints({
       query: ({ skip, limit, mistakes, seed, region }) => ({
         url: `users/?region=${region}&seed=${seed}&mistakes=${mistakes}&skip=${skip}&limit=${limit}`,
       }),
-      //   providesTags: (result = []) => [
-      //     ...result.map(
-      //       ({ index }) => ({ type: "Users", id: index, seed: seed } as const)
-      //     ),
-      //     { type: "Issues" as const, id: "LIST" },
-      //   ],
+      providesTags: (result, _, arg) =>
+        // ...result.map(
+        //   ({ index }) => ({ type: "Users", id: index, seed: seed } as const)
+        // ),
+        // { type: "Issues" as const, id: "LIST" },
+
+        result
+          ? [
+              ...result.items.map(({ id }) => ({
+                type: "Users" as const,
+                id,
+                seed: arg.seed,
+                mistakes: arg.mistakes,
+                region: arg.region,
+              })),
+              { type: "Users", id: "LIST" },
+            ]
+          : [{ type: "Users", id: "LIST" }],
+      // ],
     }),
   }),
 });
