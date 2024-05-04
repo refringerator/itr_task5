@@ -2,7 +2,7 @@ name: Build and Deploy on Github Pages
 
 on:
   push:
-    branches: ['*']
+    branches: ["*"]
 
 permissions:
   contents: write
@@ -28,10 +28,11 @@ jobs:
         run: npm install
 
       - name: Build Application
-        env: 
+        env:
           BASE_URL: ${{ github.event.repository.name }}
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: npm run build
 
       - name: Deploy to Github Pages
