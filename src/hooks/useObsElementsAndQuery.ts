@@ -34,7 +34,7 @@ const useObsElementsAndQuery = () => {
     triggerOnce: true,
   });
 
-  const { isLoading, isFetching, data, fetchNextPage } = useInfiniteQuery(
+  const { isLoading, data, fetchNextPage } = useInfiniteQuery(
     ["users", { ...params }],
     fetchUsers,
     {
@@ -43,7 +43,7 @@ const useObsElementsAndQuery = () => {
   );
 
   useEffect(() => {
-    if (!isFetching) fetchNextPage();
+    fetchNextPage();
   }, [inView]);
 
   return {
