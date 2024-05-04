@@ -13,12 +13,12 @@ const randomString = () => Math.random().toString(36).substring(2);
 
 const initialState: SettingsState = {
   errors: 0,
-  seed: randomString(),
+  seed: "0",
   locale: { value: "en", label: "English" },
 };
 
 export const settingsSlice = createSlice({
-  name: "config",
+  name: "settings",
   initialState,
   reducers: {
     setErrors: (state, action: PayloadAction<number>) => {
@@ -50,5 +50,12 @@ export const settingsSelectors = {
   },
   getLocale: (state: RootState) => {
     return state.settings.locale;
+  },
+  getParams: (state: RootState) => {
+    return {
+      seed: state.settings.seed,
+      region: state.settings.locale.value,
+      mistakes: state.settings.errors,
+    };
   },
 };
