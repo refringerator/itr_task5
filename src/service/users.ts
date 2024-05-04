@@ -8,12 +8,14 @@ export interface User {
   phone: string;
 }
 
-export interface QueryParams {
-  skip: number;
-  limit: number;
+export interface RowParams {
   mistakes: number;
   seed: string;
   region: string;
+}
+export interface QueryParams extends RowParams {
+  skip: number;
+  limit: number;
 }
 
 type UsersResponse = {

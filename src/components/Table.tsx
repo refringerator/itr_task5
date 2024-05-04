@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Space, Table } from "antd";
+import { Table } from "antd";
 import type { TableProps } from "antd";
-import { useGetUsersQuery, useLazyGetUsersQuery } from "src/service/users";
 
 interface RecordType {
   id: number;
@@ -41,6 +39,7 @@ const columns: TableProps<RecordType>["columns"] = [
     title: "#",
     dataIndex: "index",
     width: 100,
+    render: (_, record) => <span ref={record?.ref}>{record.index}</span>,
   },
   {
     title: "ID",
@@ -64,20 +63,20 @@ const columns: TableProps<RecordType>["columns"] = [
   },
 ];
 
-const MyTable = ({ data, onScroll }) => {
-  const containerHeight = window.innerHeight - 48 - 60 - 30;
+const HeadersAndPaddingSize = 48 + 60 + 30;
+
+const MyTable = ({ data }) => {
+  const containerHeight = window.innerHeight - HeadersAndPaddingSize;
 
   return (
     <Table
-      bordered={true}
       virtual
-      columns={columns}
-      //   sticky={{ offsetHeader: 64 }}
-      scroll={{ y: containerHeight }}
       rowKey="id"
+      columns={columns}
       dataSource={data}
+      scroll={{ y: containerHeight }}
+      bordered={true}
       pagination={false}
-      onScroll={onScroll}
     />
   );
 };

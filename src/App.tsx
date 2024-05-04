@@ -1,12 +1,9 @@
-import CommandPanel from "./components/CommandPanel";
-
-import Layout from "./components/Layout";
-import InfiniteScrollTable from "./components/InfiniteScrollTable";
+import { Layout, CommandPanel, InfiniteScrollUserTable } from "src/components";
 
 function App() {
   return (
     <Layout header={<CommandPanel />}>
-      <InfiniteScrollTable />
+      <InfiniteScrollUserTable />
     </Layout>
   );
 }
