@@ -3,7 +3,6 @@ import { useInView } from "react-intersection-observer";
 import { RowParams, User, useLazyGetUsersQuery } from "src/service/users";
 
 const useObsElementsAndQuery = (params: RowParams, limit: number) => {
-  const obsIndex = Math.ceil(limit * 0.25);
   const [trigger, { data, isLoading }] = useLazyGetUsersQuery();
   const [rows, setRows] = useState<User[]>([]);
   const skip = useRef(0);
@@ -28,10 +27,10 @@ const useObsElementsAndQuery = (params: RowParams, limit: number) => {
 
   useEffect(() => {
     if (!isLoading && data) {
-      // Set intersection observer to the N-th element from the end
+      // Set intersection observer to the last element
       const nr = data.items.map((val, i) => ({
         ...val,
-        ref: i === data.items.length - obsIndex ? ref : null,
+        ref: i === data.items.length - 1 ? ref : null,
       }));
 
       setRows((rows) => [...rows.map((v) => ({ ...v, ref: null })), ...nr]);
