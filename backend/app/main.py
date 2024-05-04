@@ -34,7 +34,7 @@ async def regions():
 async def get_users(
     region: str, seed: str, mistakes: float, skip: int = 0, limit: int = 10
 ):
-    return {"offset": skip, "items": generate_many(skip, limit, region, seed, mistakes)}
+    return {"next_page": {"skip": skip + limit, "limit": 10}, "items": generate_many(skip, limit, region, seed, mistakes)}
 
 
 if __name__ == "__main__":
