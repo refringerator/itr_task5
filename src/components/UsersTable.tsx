@@ -15,28 +15,28 @@ const columns: TableProps<RecordType>["columns"] = [
   {
     title: "#",
     dataIndex: "index",
-    width: 100,
+    width: 40,
     render: (_, record) => <span ref={record?.ref}>{record.index}</span>,
   },
   {
     title: "ID",
     dataIndex: "id",
-    width: 100,
+    width: 180,
   },
   {
     title: "Full name",
     dataIndex: "name",
-    width: 120,
+    width: 100,
   },
   {
     title: "Address",
     dataIndex: "address",
-    width: 120,
+    width: 160,
   },
   {
     title: "Phone",
     dataIndex: "phone",
-    width: 120,
+    width: 100,
   },
 ];
 
